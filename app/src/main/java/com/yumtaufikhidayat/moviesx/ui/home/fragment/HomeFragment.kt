@@ -10,17 +10,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yumtaufikhidayat.moviesx.R
 import com.yumtaufikhidayat.moviesx.data.NetworkResult
 import com.yumtaufikhidayat.moviesx.databinding.FragmentHomeBinding
 import com.yumtaufikhidayat.moviesx.model.genres.Genre
-import com.yumtaufikhidayat.moviesx.ui.details.fragment.DetailMovieFragment
 import com.yumtaufikhidayat.moviesx.ui.home.adapter.LoadMoreAdapter
 import com.yumtaufikhidayat.moviesx.ui.home.adapter.MovieAdapter
 import com.yumtaufikhidayat.moviesx.ui.home.viewmodel.HomeViewModel
+import com.yumtaufikhidayat.moviesx.utils.navigateToDetail
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -44,8 +43,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setToolbarHome()
         setMovieListAdapter()
         setObserver()
+    }
+
+    private fun setToolbarHome() {
+        binding.toolbarHome.tvToolbar.text = getString(R.string.tvNowPlayingMovies)
     }
 
     private fun setMovieListAdapter() {
@@ -71,11 +75,7 @@ class HomeFragment : Fragment() {
     private fun setMovieListData(genreList: List<Genre>) {
         binding.apply {
             movieAdapter = MovieAdapter(genreList) {
-                val bundle = Bundle().apply {
-                    putInt(DetailMovieFragment.EXTRA_ID, it.id)
-                    putString(DetailMovieFragment.EXTRA_TITLE, it.title)
-                }
-                findNavController().navigate(R.id.detailMovieFragment, bundle)
+                navigateToDetail(it)
             }
 
             lifecycleScope.launch {
@@ -117,11 +117,11 @@ class HomeFragment : Fragment() {
                             && itemCount < 1
                         ) {
                             rvHome.isVisible = false
-                            tvEmptyTitle.isVisible = true
-                            tvEmpty.isVisible = true
+                            tvErrorTitle.isVisible = true
+                            tvError.isVisible = true
                         } else {
-                            tvEmptyTitle.isVisible = false
-                            tvEmpty.isVisible = false
+                            tvErrorTitle.isVisible = false
+                            tvError.isVisible = false
                         }
                     }
 
