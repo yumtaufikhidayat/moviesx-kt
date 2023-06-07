@@ -17,19 +17,6 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgError"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        tools:src="@drawable/ic_outline_no_favorite"
-        app:layout_constraintVertical_bias=".45"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvErrorTitle"
         android:layout_width="0dp"
@@ -42,9 +29,11 @@
         tools:text="@string/tvOops"
         android:visibility="gone"
         tools:visibility="visible"
+        app:layout_constraintVertical_bias=".45"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgError"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvError"
@@ -76,37 +65,5 @@
         app:layout_constraintTop_toBottomOf="@id/tvError"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvEmptyTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorOrange"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        tools:text="@string/tvOops"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgError"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvEmpty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorOrange"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        tools:text="@string/tvUnableLoadData"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvEmptyTitle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
