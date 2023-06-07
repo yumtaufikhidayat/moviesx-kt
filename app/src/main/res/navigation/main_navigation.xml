@@ -15,7 +15,7 @@
             app:destination="@id/detailMovieFragment" />
         <action
             android:id="@+id/action_homeFragment_to_searchMovieFragment"
-            app:destination="@id/searchMovieFragment" />
+            app:destination="@id/discoverMovieFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailMovieFragment"
@@ -23,8 +23,8 @@
         android:label="fragment_detail_movie"
         tools:layout="@layout/fragment_detail_movie" />
     <fragment
-        android:id="@+id/searchMovieFragment"
-        android:name="com.yumtaufikhidayat.moviesx.ui.search.fragment.SearchMovieFragment"
+        android:id="@+id/discoverMovieFragment"
+        android:name="com.yumtaufikhidayat.moviesx.ui.discover.fragment.DiscoverMovieFragment"
         android:label="fragment_search_movie"
-        tools:layout="@layout/fragment_search_movie" />
+        tools:layout="@layout/fragment_discover_movie" />
 </navigation>
