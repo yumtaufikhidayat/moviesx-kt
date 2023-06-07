@@ -1,7 +1,6 @@
 package com.yumtaufikhidayat.moviesx.ui.home.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yumtaufikhidayat.moviesx.R
@@ -20,6 +20,7 @@ import com.yumtaufikhidayat.moviesx.ui.home.adapter.LoadMoreAdapter
 import com.yumtaufikhidayat.moviesx.ui.home.adapter.MovieAdapter
 import com.yumtaufikhidayat.moviesx.ui.home.viewmodel.HomeViewModel
 import com.yumtaufikhidayat.moviesx.utils.navigateToDetail
+import com.yumtaufikhidayat.moviesx.utils.showError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -46,6 +47,7 @@ class HomeFragment : Fragment() {
         setToolbarHome()
         setMovieListAdapter()
         setObserver()
+        navigateToSearch()
     }
 
     private fun setToolbarHome() {
@@ -65,9 +67,9 @@ class HomeFragment : Fragment() {
             when (it) {
                 is NetworkResult.Loading -> {}
                 is NetworkResult.Success -> setMovieListData(it.data.genres)
-                is NetworkResult.Error -> showError(it.error)
-                is NetworkResult.ServerError -> showError(it.error)
-                is NetworkResult.Unauthorized -> showError(it.error)
+                is NetworkResult.Error -> showError(HOME_TAG, it.error)
+                is NetworkResult.ServerError -> showError(HOME_TAG, it.error)
+                is NetworkResult.Unauthorized -> showError(HOME_TAG, it.error)
             }
         }
     }
@@ -75,7 +77,7 @@ class HomeFragment : Fragment() {
     private fun setMovieListData(genreList: List<Genre>) {
         binding.apply {
             movieAdapter = MovieAdapter(genreList) {
-                navigateToDetail(it)
+                navigateToDetail(it.id, it.title)
             }
 
             lifecycleScope.launch {
@@ -138,8 +140,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showError(message: String) {
-        Log.e(HOME_TAG, "Error: $message")
+    private fun navigateToSearch() {
+        binding.fabSearch.setOnClickListener {
+            findNavController().navigate(R.id.discoverMovieFragment)
+        }
     }
 
     override fun onDestroyView() {
