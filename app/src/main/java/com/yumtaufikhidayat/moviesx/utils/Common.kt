@@ -2,6 +2,7 @@ package com.yumtaufikhidayat.moviesx.utils
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -9,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.yumtaufikhidayat.moviesx.R
-import com.yumtaufikhidayat.moviesx.model.main.MovieMainResult
 import com.yumtaufikhidayat.moviesx.ui.details.fragment.DetailMovieFragment
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -40,10 +40,10 @@ fun String.convertDate(inputFormat: String, outputFormat: String): String {
     return newOutputFormat.format(formatParser)
 }
 
-fun Fragment.navigateToDetail(data: MovieMainResult) {
+fun Fragment.navigateToDetail(id: Int, title: String) {
     val bundle = Bundle().apply {
-        putInt(DetailMovieFragment.EXTRA_ID, data.id)
-        putString(DetailMovieFragment.EXTRA_TITLE, data.title)
+        putInt(DetailMovieFragment.EXTRA_ID, id)
+        putString(DetailMovieFragment.EXTRA_TITLE, title)
     }
     this.findNavController().navigate(R.id.detailMovieFragment, bundle)
 }
@@ -55,4 +55,10 @@ fun toRating(data: Double): String {
 
 fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+
+
+fun showError(tag: String, message: String) {
+    Log.e(tag, "Error: $message")
 }
