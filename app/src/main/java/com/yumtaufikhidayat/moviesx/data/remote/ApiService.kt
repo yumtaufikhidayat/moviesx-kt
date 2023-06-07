@@ -40,4 +40,9 @@ interface ApiService {
     suspend fun getMovieReviews(
         @Path(UrlConstant.QUERY_MOVIE_ID) movieId: Int
     ): MovieReviewResponse
+
+    @GET(UrlConstant.DISCOVER_MOVIES)
+    suspend fun getDiscoverMovie(
+        @Query(UrlConstant.QUERY_Q) query: String
+    ): MovieMainResponse
 }
