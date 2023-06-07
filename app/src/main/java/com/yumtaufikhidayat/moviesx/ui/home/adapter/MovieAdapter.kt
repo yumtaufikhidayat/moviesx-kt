@@ -46,7 +46,11 @@ class MovieAdapter(
                         Constant.EEE_D_MMM_YYYY_FORMAT
                     ) ?: root.context.getString(R.string.tvNA)
                 )
-                tvRating.text = toRating(data.voteAverage)
+                tvRating.text = root.context.getString(
+                    R.string.tvRatingAverageCount,
+                    toRating(data.voteAverage),
+                    "${data.voteCount}"
+                )
 
                 val genre = mutableListOf<String>()
                 data.genreIds.forEach { id ->
