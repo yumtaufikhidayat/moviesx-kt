@@ -420,7 +420,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <include
-            layout="@layout/layout_loading"/>
+            layout="@layout/layout_loading_detail"/>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 

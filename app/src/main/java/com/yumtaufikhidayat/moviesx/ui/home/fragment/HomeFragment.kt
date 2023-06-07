@@ -88,7 +88,7 @@ class HomeFragment : Fragment() {
                 layoutError.apply {
                     addLoadStateListener { loadState ->
                         val loadStateRefresh = loadState.source.refresh
-                        pbLoading.isVisible = loadStateRefresh is LoadState.Loading
+                        shimmerLoading.isVisible = loadStateRefresh is LoadState.Loading
                         rvHome.isVisible = loadStateRefresh is LoadState.NotLoading
                         tvErrorTitle.apply {
                             isVisible = loadStateRefresh is LoadState.Error

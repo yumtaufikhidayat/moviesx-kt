@@ -7,19 +7,15 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-    <ProgressBar
-        android:id="@+id/pbLoading"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/colorOrange"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/imgError"
-        app:layout_constraintEnd_toEndOf="@id/imgError"/>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            layout="@layout/layout_loading_home"/>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgError"
