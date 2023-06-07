@@ -18,17 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@null"
+            android:visibility="gone"
+            tools:visibility="visible"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvToolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -43,13 +44,14 @@
             app:layout_constraintStart_toEndOf="@id/imgBack"
             app:layout_constraintEnd_toStartOf="@id/imgShare"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
             android:src="@drawable/ic_share"
             android:layout_marginEnd="16dp"
-            android:contentDescription="@string/tvShare"
             app:layout_constraintTop_toTopOf="@id/tvToolbar"
             app:layout_constraintBottom_toBottomOf="@id/tvToolbar"
             app:layout_constraintEnd_toEndOf="parent" />
