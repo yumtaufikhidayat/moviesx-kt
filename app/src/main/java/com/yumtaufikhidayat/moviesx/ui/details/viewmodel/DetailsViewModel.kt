@@ -9,4 +9,12 @@ import javax.inject.Inject
 class DetailsViewModel @Inject constructor(
     private val repository: MoviesXRepository
 ) : ViewModel() {
+
+    fun getDetailMovies(movieId: Int) = repository.getDetailMovie(movieId)
+
+    fun getMovieVideo(movieId: Int) = repository.getMovieVideo(movieId)
+
+    fun getMovieCast(movieId: Int) = repository.getMovieCast(movieId)
+
+    fun getMovieReviews(movieId: Int) = repository.getMovieReviews(movieId)
 }

@@ -1,11 +1,35 @@
 package com.yumtaufikhidayat.moviesx.ui.details.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.SnapHelper
+import com.yumtaufikhidayat.moviesx.R
+import com.yumtaufikhidayat.moviesx.data.NetworkResult
 import com.yumtaufikhidayat.moviesx.databinding.FragmentDetailMovieBinding
+import com.yumtaufikhidayat.moviesx.model.cast.Cast
+import com.yumtaufikhidayat.moviesx.model.detail.MovieDetailResponse
+import com.yumtaufikhidayat.moviesx.model.movietrailer.TrailerResult
+import com.yumtaufikhidayat.moviesx.model.reviews.ReviewsResult
+import com.yumtaufikhidayat.moviesx.ui.details.adapter.MovieCastAdapter
+import com.yumtaufikhidayat.moviesx.ui.details.adapter.MovieReviewsAdapter
+import com.yumtaufikhidayat.moviesx.ui.details.adapter.MovieTrailerVideoAdapter
+import com.yumtaufikhidayat.moviesx.ui.details.viewmodel.DetailsViewModel
+import com.yumtaufikhidayat.moviesx.utils.Constant
+import com.yumtaufikhidayat.moviesx.utils.convertDate
+import com.yumtaufikhidayat.moviesx.utils.loadImage
+import com.yumtaufikhidayat.moviesx.utils.showToast
+import com.yumtaufikhidayat.moviesx.utils.toRating
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -13,6 +37,14 @@ class DetailMovieFragment : Fragment() {
 
     private var _binding: FragmentDetailMovieBinding? = null
     private val binding get() = _binding!!
+
+    private val detailsViewModel by viewModels<DetailsViewModel>()
+    private val castAdapter by lazy { MovieCastAdapter() }
+    private val trailerVideoAdapter by lazy { MovieTrailerVideoAdapter() }
+    private val reviewsAdapter by lazy { MovieReviewsAdapter() }
+
+    private var idMovie = 0
+    private var title = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,10 +56,284 @@ class DetailMovieFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        getBundleData()
+        showToolbarData()
+        setDetailMovieObserver()
+        setCastAdapter()
+        setCastObserver(idMovie)
+        setTrailerVideoAdapter()
+        showTrailerVideoObserver(idMovie)
+        setReviewsAdapter()
+        showReviewsObserver(idMovie)
+        setReadMore()
+    }
+
+    private fun getBundleData() {
+        idMovie = arguments?.getInt(EXTRA_ID, 0) ?: 0
+        title = arguments?.getString(EXTRA_TITLE, "").orEmpty()
+    }
+
+    private fun showToolbarData() {
+        binding.toolbarDetailMovie.apply {
+            tvToolbar.text = title
+            imgBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
+        }
+    }
+
+    private fun setDetailMovieObserver() {
+        detailsViewModel.getDetailMovies(idMovie).observe(viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Loading -> {}
+                is NetworkResult.Success -> setDetailData(it.data)
+                is NetworkResult.Error -> showError(it.error)
+                is NetworkResult.ServerError -> showError(it.error)
+                is NetworkResult.Unauthorized -> showError(it.error)
+            }
+        }
+    }
+
+    private fun setDetailData(data: MovieDetailResponse) {
+        binding.apply {
+            imgPoster.loadImage(data.posterPath.orEmpty())
+            imgBackdrop.loadImage(data.backdropPath)
+            tvTitle.text = data.title
+
+            val releasedDate = data.releaseDate.convertDate(
+                Constant.YYYY_MM_DD_FORMAT,
+                Constant.EEE_D_MMM_YYYY_FORMAT
+            )
+            tvReleasedOn.text = getString(
+                R.string.tvReleasedOn,
+                releasedDate
+            )
+            tvStatus.text = data.status
+
+            when {
+                data.overview.isEmpty() -> {
+                    tvOverview.isVisible = false
+                    tvNoOverview.isVisible = true
+                    tvReadMore.isVisible = false
+                }
+
+                else -> {
+                    tvNoOverview.isVisible = false
+                    tvOverview.apply {
+                        isVisible = true
+                        text = data.overview
+                    }
+                }
+            }
+
+            when {
+                data.voteAverage.toString().isEmpty() -> tvRating.text = getString(R.string.tvNA)
+                else -> tvRating.text = toRating(data.voteAverage)
+            }
+
+            when {
+                data.originalLanguage.isEmpty() -> tvLanguage.text = getString(R.string.tvNA)
+                else -> tvLanguage.text =
+                    if (data.spokenLanguages.isNotEmpty()) {
+                        data.spokenLanguages.first().englishName
+                    } else {
+                        data.originalLanguage
+                    }
+            }
+
+            when {
+                data.productionCountries.isEmpty() -> tvCountry.text = getString(R.string.tvNA)
+                else -> tvCountry.text = data.productionCountries.joinToString { countries -> countries.iso31661 }
+            }
+
+            when {
+                data.runtime.toString().isEmpty() -> tvRuntime.text = getString(R.string.tvNA)
+                else -> tvRuntime.text = convertRuntime(data.runtime)
+            }
+
+            when {
+                data.movieDetailGenres.isEmpty() -> showNoGenres(true)
+                else -> {
+                    showNoGenres(false)
+                    tvGenre.text = data.movieDetailGenres.joinToString { genre -> genre.name }
+                }
+            }
+
+            shareMovie(data.homepage)
+        }
+    }
+
+    private fun setReadMore() {
+        binding.apply {
+            tvReadMore.isVisible = true
+            tvReadMore.setOnClickListener {
+                if (tvReadMore.text.toString() == getString(R.string.tvReadMore)) {
+                    tvOverview.maxLines = Integer.MAX_VALUE
+                    tvOverview.ellipsize = null
+                    tvReadMore.text = getString(R.string.tvReadLess)
+                } else {
+                    tvOverview.maxLines = 4
+                    tvOverview.ellipsize = TextUtils.TruncateAt.END
+                    tvReadMore.text = getString(R.string.tvReadMore)
+                }
+            }
+        }
+    }
+
+    private fun shareMovie(url: String) {
+        binding.apply {
+            toolbarDetailMovie.imgShare.setOnClickListener {
+                try {
+                    val body = getString(R.string.tvVisitMovie, url)
+                    val shareIntent = Intent(Intent.ACTION_SEND)
+                    shareIntent.apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, body)
+                    }
+                    startActivity(
+                        Intent.createChooser(
+                            shareIntent,
+                            getString(R.string.tvShareWith)
+                        )
+                    )
+                } catch (e: Exception) {
+                    showToast(requireContext(), getString(R.string.tvOops))
+                }
+            }
+        }
+    }
+
+    private fun setCastAdapter() {
+        binding.rvMovieCast.apply {
+            val helper: SnapHelper = LinearSnapHelper()
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            helper.attachToRecyclerView(this)
+            setHasFixedSize(true)
+            adapter = castAdapter
+        }
+    }
+
+    private fun setCastObserver(idMovie: Int) {
+        detailsViewModel.getMovieCast(idMovie).observe(viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Loading -> showNoCast(false)
+                is NetworkResult.Success -> setCastData(it.data.cast)
+                is NetworkResult.Error -> showNoCast(false)
+                is NetworkResult.ServerError -> showNoCast(false)
+                is NetworkResult.Unauthorized -> showNoCast(false)
+            }
+        }
+    }
+
+    private fun setCastData(cast: List<Cast>) {
+        if (cast.isEmpty()) {
+            showNoCast(true)
+        } else {
+            showNoCast(false)
+            castAdapter.submitList(cast)
+        }
+    }
+
+    private fun setTrailerVideoAdapter() {
+        binding.rvTrailerVideo.apply {
+            val helper: SnapHelper = LinearSnapHelper()
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            helper.attachToRecyclerView(this)
+            setHasFixedSize(true)
+            adapter = trailerVideoAdapter
+        }
+    }
+
+    private fun showTrailerVideoObserver(idMovie: Int) {
+        detailsViewModel.getMovieVideo(idMovie).observe(viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Loading -> showVideo(false)
+                is NetworkResult.Error -> showVideo(false)
+                is NetworkResult.Success -> setMovieVideoTrailer(it.data.results)
+                is NetworkResult.ServerError -> showVideo(false)
+                is NetworkResult.Unauthorized -> showVideo(false)
+            }
+        }
+    }
+
+    private fun setMovieVideoTrailer(results: List<TrailerResult>) {
+        if (results.isEmpty()) {
+            showVideo(false)
+        } else {
+            showVideo(true)
+            trailerVideoAdapter.submitList(results)
+        }
+    }
+
+    private fun setReviewsAdapter() {
+        binding.rvMovieReviews.apply {
+            val helper: SnapHelper = LinearSnapHelper()
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            helper.attachToRecyclerView(this)
+            setHasFixedSize(true)
+            adapter = reviewsAdapter
+        }
+    }
+
+    private fun showReviewsObserver(idMovie: Int) {
+        detailsViewModel.getMovieReviews(idMovie).observe(viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Loading -> showNoReviews(false)
+                is NetworkResult.Success -> setReviewsData(it.data.results)
+                is NetworkResult.Error -> showNoReviews(false)
+                is NetworkResult.ServerError -> showNoReviews(false)
+                is NetworkResult.Unauthorized -> showNoReviews(false)
+            }
+        }
+    }
+
+    private fun setReviewsData(reviewsResults: List<ReviewsResult>) {
+        if (reviewsResults.isEmpty()) {
+            showNoReviews(true)
+        } else {
+            showNoReviews(false)
+            reviewsAdapter.submitList(reviewsResults)
+        }
+    }
+
+    private fun showNoGenres(isShow: Boolean) = binding.tvNoGenres.isVisible == isShow
+
+    private fun showNoCast(isShow: Boolean) = binding.tvNoCast.isVisible == isShow
+
+    private fun showNoReviews(isShow: Boolean) = binding.tvNoReviews.isVisible == isShow
+
+    private fun showVideo(isShow: Boolean) {
+        binding.apply {
+            if (isShow) {
+                rvTrailerVideo.isVisible = true
+                tvNoVideo.isVisible = false
+            } else {
+                rvTrailerVideo.isVisible = false
+                tvNoVideo.isVisible = true
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        Log.e(DETAIL_TAG, "Error: $message")
+    }
+
+    private fun convertRuntime(data: Int): String {
+        val hours = data / TIME_60
+        val minutes = data % TIME_60
+        return getString(R.string.tvRuntimeInTime, hours, minutes)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val DETAIL_TAG = "detail_tag"
+        const val EXTRA_ID = "EXTRA_ID"
+        const val EXTRA_TITLE = "EXTRA_TITLE"
+        const val TIME_60 = 60
     }
 }

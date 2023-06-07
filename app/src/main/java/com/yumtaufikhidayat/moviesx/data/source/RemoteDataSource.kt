@@ -7,9 +7,12 @@ import androidx.paging.PagingConfig
 import com.yumtaufikhidayat.moviesx.data.NetworkResult
 import com.yumtaufikhidayat.moviesx.data.paging.MoviePagingSource
 import com.yumtaufikhidayat.moviesx.data.remote.ApiService
+import com.yumtaufikhidayat.moviesx.model.cast.MovieCastResponse
+import com.yumtaufikhidayat.moviesx.model.detail.MovieDetailResponse
 import com.yumtaufikhidayat.moviesx.model.genres.GenresResponse
+import com.yumtaufikhidayat.moviesx.model.movietrailer.MovieVideoResponse
+import com.yumtaufikhidayat.moviesx.model.reviews.MovieReviewResponse
 import com.yumtaufikhidayat.moviesx.utils.Constant
-import java.lang.Exception
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(
@@ -32,4 +35,44 @@ class RemoteDataSource @Inject constructor(
         ), pagingSourceFactory = {
             MoviePagingSource(apiService)
         }).flow
+
+    fun getDetailMovie(movieId: Int): LiveData<NetworkResult<MovieDetailResponse>> = liveData {
+        emit(NetworkResult.Loading)
+        try {
+            val response = apiService.getDetailMovie(movieId)
+            emit(NetworkResult.Success(response))
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message.toString()))
+        }
+    }
+
+    fun getMovieVideo(movieId: Int): LiveData<NetworkResult<MovieVideoResponse>> = liveData {
+        emit(NetworkResult.Loading)
+        try {
+            val response = apiService.getMovieVideo(movieId)
+            emit(NetworkResult.Success(response))
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message.toString()))
+        }
+    }
+
+    fun getMovieCast(movieId: Int): LiveData<NetworkResult<MovieCastResponse>> = liveData {
+        emit(NetworkResult.Loading)
+        try {
+            val response = apiService.getMovieCast(movieId)
+            emit(NetworkResult.Success(response))
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message.toString()))
+        }
+    }
+
+    fun getMovieReviews(movieId: Int): LiveData<NetworkResult<MovieReviewResponse>> = liveData {
+        emit(NetworkResult.Loading)
+        try {
+            val response = apiService.getMovieReviews(movieId)
+            emit(NetworkResult.Success(response))
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message.toString()))
+        }
+    }
 }

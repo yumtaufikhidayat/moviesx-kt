@@ -9,4 +9,12 @@ class MoviesXRepository @Inject constructor(
     fun getGenres() = remoteDataSource.getGenres()
 
     fun getMovieNowPlaying() = remoteDataSource.getMovieNowPlaying()
+
+    fun getDetailMovie(movieId: Int) = remoteDataSource.getDetailMovie(movieId)
+
+    fun getMovieVideo(movieId: Int) = remoteDataSource.getMovieVideo(movieId)
+
+    fun getMovieCast(movieId: Int) = remoteDataSource.getMovieCast(movieId)
+
+    fun getMovieReviews(movieId: Int) = remoteDataSource.getMovieReviews(movieId)
 }
