@@ -7,6 +7,7 @@
     <string name="tvMovies">Movies</string>
     <string name="tvTitle">Title</string>
     <string name="tvRating">Rating</string>
+    <string name="tvRatingAverageCount">%1$s (%2$s)</string>
     <string name="tvReleasedOn">Released on: %1$s</string>
     <string name="tvStatus">Status</string>
     <string name="tvLanguage">Language</string>
