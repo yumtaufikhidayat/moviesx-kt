@@ -10,6 +10,7 @@ import com.yumtaufikhidayat.moviesx.data.remote.ApiService
 import com.yumtaufikhidayat.moviesx.model.cast.MovieCastResponse
 import com.yumtaufikhidayat.moviesx.model.detail.MovieDetailResponse
 import com.yumtaufikhidayat.moviesx.model.genres.GenresResponse
+import com.yumtaufikhidayat.moviesx.model.main.MovieMainResponse
 import com.yumtaufikhidayat.moviesx.model.movietrailer.MovieVideoResponse
 import com.yumtaufikhidayat.moviesx.model.reviews.MovieReviewResponse
 import com.yumtaufikhidayat.moviesx.utils.Constant
@@ -70,6 +71,16 @@ class RemoteDataSource @Inject constructor(
         emit(NetworkResult.Loading)
         try {
             val response = apiService.getMovieReviews(movieId)
+            emit(NetworkResult.Success(response))
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(e.message.toString()))
+        }
+    }
+
+    fun discoverMovie(query: String): LiveData<NetworkResult<MovieMainResponse>> = liveData {
+        emit(NetworkResult.Loading)
+        try {
+            val response = apiService.getDiscoverMovie(query)
             emit(NetworkResult.Success(response))
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message.toString()))
