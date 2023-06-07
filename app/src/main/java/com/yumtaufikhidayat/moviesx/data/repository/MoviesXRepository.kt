@@ -17,4 +17,6 @@ class MoviesXRepository @Inject constructor(
     fun getMovieCast(movieId: Int) = remoteDataSource.getMovieCast(movieId)
 
     fun getMovieReviews(movieId: Int) = remoteDataSource.getMovieReviews(movieId)
+
+    fun discoverMovie(query: String) = remoteDataSource.discoverMovie(query)
 }
