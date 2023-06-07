@@ -76,6 +76,7 @@ class DetailMovieFragment : Fragment() {
     private fun showToolbarData() {
         binding.toolbarDetailMovie.apply {
             tvToolbar.text = title
+            imgBack.isVisible = true
             imgBack.setOnClickListener {
                 findNavController().popBackStack()
             }
@@ -197,8 +198,9 @@ class DetailMovieFragment : Fragment() {
     }
 
     private fun shareMovie(url: String) {
-        binding.apply {
-            toolbarDetailMovie.imgShare.setOnClickListener {
+        binding.toolbarDetailMovie.apply {
+            imgShare.isVisible = true
+            imgShare.setOnClickListener {
                 try {
                     val body = getString(R.string.tvVisitMovie, url)
                     val shareIntent = Intent(Intent.ACTION_SEND)
