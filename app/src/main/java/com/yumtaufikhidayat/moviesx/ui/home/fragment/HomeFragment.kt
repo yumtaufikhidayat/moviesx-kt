@@ -65,9 +65,9 @@ class HomeFragment : Fragment() {
             when (it) {
                 is NetworkResult.Loading -> {}
                 is NetworkResult.Success -> setMovieListData(it.data.genres)
-                is NetworkResult.Error -> Log.e(HOME_TAG, "Error: ${it.error}")
-                is NetworkResult.ServerError -> Log.e(HOME_TAG, "Error: ${it.error}")
-                is NetworkResult.Unauthorized -> Log.e(HOME_TAG, "Error: ${it.error}")
+                is NetworkResult.Error -> showError(it.error)
+                is NetworkResult.ServerError -> showError(it.error)
+                is NetworkResult.Unauthorized -> showError(it.error)
             }
         }
     }
@@ -136,6 +136,10 @@ class HomeFragment : Fragment() {
                 footer = LoadMoreAdapter { movieAdapter?.retry() }
             )
         }
+    }
+
+    private fun showError(message: String) {
+        Log.e(HOME_TAG, "Error: $message")
     }
 
     override fun onDestroyView() {
