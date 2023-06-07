@@ -1,11 +1,16 @@
 package com.yumtaufikhidayat.moviesx.utils
 
 import android.content.Context
+import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.yumtaufikhidayat.moviesx.R
+import com.yumtaufikhidayat.moviesx.model.main.MovieMainResult
+import com.yumtaufikhidayat.moviesx.ui.details.fragment.DetailMovieFragment
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -33,6 +38,14 @@ fun String.convertDate(inputFormat: String, outputFormat: String): String {
     }
     val newOutputFormat = SimpleDateFormat(outputFormat, Locale.US)
     return newOutputFormat.format(formatParser)
+}
+
+fun Fragment.navigateToDetail(data: MovieMainResult) {
+    val bundle = Bundle().apply {
+        putInt(DetailMovieFragment.EXTRA_ID, data.id)
+        putString(DetailMovieFragment.EXTRA_TITLE, data.title)
+    }
+    this.findNavController().navigate(R.id.detailMovieFragment, bundle)
 }
 
 fun toRating(data: Double): String {
