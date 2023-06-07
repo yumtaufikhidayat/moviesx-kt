@@ -13,6 +13,7 @@
         layout="@layout/toolbar_general" />
 
     <ScrollView
+        android:id="@+id/scrollDetailMovie"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="none"
@@ -403,5 +404,35 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/layoutDetailGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="scrollDetailMovie"/>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLoadingDetailMovie"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/toolbarDetailMovie"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include
+            layout="@layout/layout_loading"/>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/layoutErrorGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="layoutError"/>
+
+    <include
+        android:id="@+id/layoutError"
+        layout="@layout/layout_error"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

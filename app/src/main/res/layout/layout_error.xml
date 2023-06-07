@@ -21,11 +21,10 @@
         app:layout_constraintStart_toStartOf="@id/imgError"
         app:layout_constraintEnd_toEndOf="@id/imgError"/>
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgError"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:contentDescription="@null"
         android:visibility="gone"
         tools:visibility="visible"
         tools:src="@drawable/ic_outline_no_favorite"
@@ -35,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvErrorTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -44,14 +43,14 @@
         android:textColor="@color/colorOrange"
         android:textStyle="bold"
         android:textAlignment="center"
-        tools:text="@string/tvNoFavoriteData"
+        tools:text="@string/tvOops"
         android:visibility="gone"
         tools:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgError"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvError"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -61,14 +60,14 @@
         android:textColor="@color/colorOrange"
         android:textAlignment="center"
         android:textSize="13sp"
-        tools:text="@string/tvSaveFavoriteMovie"
+        tools:text="@string/tvNoOverview"
         android:visibility="gone"
         tools:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvErrorTitle"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnRetry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -82,7 +81,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvEmptyTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -98,7 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgError"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

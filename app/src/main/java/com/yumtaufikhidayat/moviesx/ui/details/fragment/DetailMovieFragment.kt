@@ -3,7 +3,6 @@ package com.yumtaufikhidayat.moviesx.ui.details.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,9 +62,9 @@ class DetailMovieFragment : Fragment() {
         setCastAdapter()
         setCastObserver(idMovie)
         setTrailerVideoAdapter()
-        showTrailerVideoObserver(idMovie)
+        setTrailerVideoObserver(idMovie)
         setReviewsAdapter()
-        showReviewsObserver(idMovie)
+        setReviewsObserver(idMovie)
         setReadMore()
     }
 
@@ -86,11 +85,27 @@ class DetailMovieFragment : Fragment() {
     private fun setDetailMovieObserver() {
         detailsViewModel.getDetailMovies(idMovie).observe(viewLifecycleOwner) {
             when (it) {
-                is NetworkResult.Loading -> {}
-                is NetworkResult.Success -> setDetailData(it.data)
-                is NetworkResult.Error -> showError(it.error)
-                is NetworkResult.ServerError -> showError(it.error)
-                is NetworkResult.Unauthorized -> showError(it.error)
+                is NetworkResult.Loading -> {
+                    showLayoutError(false, "")
+                    showLoading(true)
+                }
+                is NetworkResult.Success -> {
+                    showLayoutError(false, "")
+                    showLoading(false)
+                    setDetailData(it.data)
+                }
+                is NetworkResult.Error -> {
+                    showLoading(false)
+                    showLayoutError(true, it.error)
+                }
+                is NetworkResult.ServerError -> {
+                    showLoading(false)
+                    showLayoutError(true, it.error)
+                }
+                is NetworkResult.Unauthorized -> {
+                    showLoading(false)
+                    showLayoutError(true, it.error)
+                }
             }
         }
     }
@@ -245,7 +260,7 @@ class DetailMovieFragment : Fragment() {
         }
     }
 
-    private fun showTrailerVideoObserver(idMovie: Int) {
+    private fun setTrailerVideoObserver(idMovie: Int) {
         detailsViewModel.getMovieVideo(idMovie).observe(viewLifecycleOwner) {
             when (it) {
                 is NetworkResult.Loading -> showVideo(false)
@@ -276,7 +291,7 @@ class DetailMovieFragment : Fragment() {
         }
     }
 
-    private fun showReviewsObserver(idMovie: Int) {
+    private fun setReviewsObserver(idMovie: Int) {
         detailsViewModel.getMovieReviews(idMovie).observe(viewLifecycleOwner) {
             when (it) {
                 is NetworkResult.Loading -> showNoReviews(false)
@@ -315,8 +330,43 @@ class DetailMovieFragment : Fragment() {
         }
     }
 
-    private fun showError(message: String) {
-        Log.e(DETAIL_TAG, "Error: $message")
+    private fun showLayoutError(isShow: Boolean, message: String) {
+        binding.apply {
+            if (isShow) {
+                layoutErrorGroup.apply {
+                    visibility = View.VISIBLE
+                    layoutError.apply {
+                        tvErrorTitle.visibility = View.VISIBLE
+                        tvErrorTitle.text = getString(R.string.tvOops)
+
+                        tvError.visibility = View.VISIBLE
+                        tvError.text = message
+
+                        btnRetry.visibility = View.VISIBLE
+                        btnRetry.setOnClickListener {
+                            setDetailMovieObserver()
+                            setCastObserver(idMovie)
+                            setTrailerVideoObserver(idMovie)
+                            setReviewsObserver(idMovie)
+                        }
+                    }
+                }
+            } else {
+                layoutErrorGroup.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun showLoading(isShow: Boolean) {
+        binding.apply {
+            if (isShow) {
+                shimmerLoadingDetailMovie.visibility = View.VISIBLE
+                layoutDetailGroup.visibility = View.GONE
+            } else {
+                shimmerLoadingDetailMovie.visibility = View.GONE
+                layoutDetailGroup.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun convertRuntime(data: Int): String {
@@ -331,7 +381,6 @@ class DetailMovieFragment : Fragment() {
     }
 
     companion object {
-        private const val DETAIL_TAG = "detail_tag"
         const val EXTRA_ID = "EXTRA_ID"
         const val EXTRA_TITLE = "EXTRA_TITLE"
         const val TIME_60 = 60
