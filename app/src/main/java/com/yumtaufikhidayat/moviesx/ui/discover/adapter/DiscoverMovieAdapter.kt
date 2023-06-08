@@ -38,10 +38,12 @@ class DiscoverMovieAdapter(
             binding.apply {
                 imgPoster.loadImage(data.posterPath)
                 tvTitle.text = data.title
-                tvReleasedOn.text = data.releaseDate?.convertDate(
-                    Constant.YYYY_MM_DD_FORMAT,
-                    Constant.EEE_D_MMM_YYYY_FORMAT
-                ) ?: root.context.getString(R.string.tvNA)
+                tvReleasedOn.text = root.context.getString(
+                    R.string.tvReleasedOn, data.releaseDate?.convertDate(
+                        Constant.YYYY_MM_DD_FORMAT,
+                        Constant.EEE_D_MMM_YYYY_FORMAT
+                    ) ?: root.context.getString(R.string.tvNA)
+                )
                 tvRating.text = root.context.getString(
                     R.string.tvRatingAverageCount,
                     toRating(data.voteAverage),
