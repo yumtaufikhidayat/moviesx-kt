@@ -59,9 +59,9 @@ class DiscoverMovieFragment : Fragment() {
             when (it) {
                 is NetworkResult.Loading -> {}
                 is NetworkResult.Success -> setMovieListData(it.data.genres)
-                is NetworkResult.Error -> {}
-                is NetworkResult.ServerError -> {}
-                is NetworkResult.Unauthorized -> {}
+                is NetworkResult.Error -> showError(DISCOVER_TAG, it.error)
+                is NetworkResult.ServerError -> showError(DISCOVER_TAG, it.error)
+                is NetworkResult.Unauthorized -> showError(DISCOVER_TAG, it.error)
             }
         }
     }
