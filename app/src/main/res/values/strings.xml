@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">MoviesX</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tvAppVersion">v1.0</string>
     <string name="tvPoster">Poster</string>
     <string name="tvBanner">Banner</string>
     <string name="tvMovies">Movies</string>
