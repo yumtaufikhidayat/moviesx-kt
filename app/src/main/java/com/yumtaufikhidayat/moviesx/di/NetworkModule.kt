@@ -1,8 +1,6 @@
 package com.yumtaufikhidayat.moviesx.di
 
 import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.yumtaufikhidayat.moviesx.BuildConfig
 import com.yumtaufikhidayat.moviesx.data.remote.ApiService
 import com.yumtaufikhidayat.moviesx.data.remote.UrlConstant
