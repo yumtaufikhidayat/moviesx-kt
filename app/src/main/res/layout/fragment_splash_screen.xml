@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:textAlignment="center"
-        android:text="@string/tvAppVersion"
+        tools:text="@string/tvAppVersion"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
