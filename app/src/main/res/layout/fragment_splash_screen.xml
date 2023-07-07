@@ -29,7 +29,7 @@
         android:layout_marginBottom="16dp"
         android:textAlignment="center"
         tools:text="@string/tvAppVersion"
-        android:textColor="@color/white"
+        android:textColor="@color/colorOrange"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
