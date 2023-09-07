@@ -53,11 +53,9 @@ fun toRating(data: Double): String {
     return ((data * tenDouble).roundToInt() / tenDouble).toString()
 }
 
-fun showToast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+fun Context.showToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
-
-
 
 fun showError(tag: String, message: String) {
     Log.e(tag, "Error: $message")

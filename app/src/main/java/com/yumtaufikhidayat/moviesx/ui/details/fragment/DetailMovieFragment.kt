@@ -215,7 +215,7 @@ class DetailMovieFragment : Fragment() {
                         )
                     )
                 } catch (e: Exception) {
-                    showToast(requireContext(), getString(R.string.tvOops))
+                    requireContext().showToast(getString(R.string.tvOops))
                 }
             }
         }
