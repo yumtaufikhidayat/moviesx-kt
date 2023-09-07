@@ -90,12 +90,12 @@ class DiscoverMovieFragment : Fragment() {
             })
 
             addTextChangedListener(afterTextChanged = {
-                showDiscoverData(it)
+                showDiscoverDataObserver(it)
             })
         }
     }
 
-    private fun showDiscoverData(s: Editable?) {
+    private fun showDiscoverDataObserver(s: Editable?) {
         discoverViewModel.discoverMovie(s.toString()).observe(viewLifecycleOwner) {
             when (it) {
                 is NetworkResult.Loading -> {}
