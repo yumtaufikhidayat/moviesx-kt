@@ -17,7 +17,7 @@ import com.yumtaufikhidayat.moviesx.utils.toRating
 class MovieAdapter(
     private val genres: List<Genre>,
     private val onItemClickListener: (MovieMainResult) -> Unit
-) : PagingDataAdapter<MovieMainResult, MovieAdapter.ViewHolder>(movieDiffCallback) {
+) : PagingDataAdapter<MovieMainResult, MovieAdapter.ViewHolder>(MOVIE_DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -74,7 +74,7 @@ class MovieAdapter(
     }
 
     companion object {
-        val movieDiffCallback = object : ItemCallback<MovieMainResult>() {
+        private val MOVIE_DIFF_CALLBACK = object : ItemCallback<MovieMainResult>() {
             override fun areItemsTheSame(
                 oldItem: MovieMainResult,
                 newItem: MovieMainResult
